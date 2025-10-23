@@ -702,6 +702,53 @@
             border-top: 1px solid var(--gris-medio);
         }
 
+        /* Mejoras adicionales */
+        .input-error {
+            border-color: var(--rojo-bajo) !important;
+            background-color: #fff5f5;
+        }
+
+        .error-message {
+            color: var(--rojo-bajo);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.required label::after {
+            content: " *";
+            color: var(--rojo-bajo);
+        }
+
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .loading-indicator i {
+            color: var(--verde-principal);
+            margin-right: 8px;
+        }
+
+        .btn-secundario {
+            display: inline-block;
+            background-color: var(--gris-medio);
+            color: var(--texto-oscuro);
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-secundario:hover {
+            background-color: #d0d0d0;
+        }
+
         /* Responsive - MEJORADO */
         @media (max-width: 1024px) {
             .nav-link {
@@ -858,10 +905,6 @@
                 padding: 10px;
             }
         }
-
-        
-
-
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -910,6 +953,7 @@
                     </a>
                     <div class="dropdown-content">
                         <a href="#legal" data-seccion="legal"><i class="fas fa-balance-scale"></i> Marco Legal</a>
+                        <a href="reglamento-municipal.pdf" download="Reglamento-Municipal-VPO-Herrera.pdf"><i class="fas fa-file-contract"></i> Reglamento Municipal</a>
                         <a href="https://www.juntadeandalucia.es/boja/2012/11/1" target="_blank"><i
                               class="fas fa-file-pdf"></i> Decreto 1/2012</a>
                         <a href="https://www.juntadeandalucia.es/boja/2010/45/1" target="_blank"><i
@@ -949,22 +993,25 @@
                     una estimación de tu puntuación en el baremo de adjudicación de viviendas protegidas.</p>
 
                 <form id="simulador-form">
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="ano_inscripcion">1. Año de inscripción en el Registro</label>
                         <input type="number" id="ano_inscripcion" placeholder="Ej: 2019" min="1990" max="2024">
+                        <div class="error-message" id="error-ano">Por favor, introduce un año válido entre 1990 y 2024</div>
                         <div class="info-text">Se asignará 1 punto por cada año completo de antigüedad (máximo 5 puntos)
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="ingresos_anuales">2. Ingresos familiares anuales (€)</label>
                         <input type="number" id="ingresos_anuales" placeholder="Ej: 10000" step="100">
+                        <div class="error-message" id="error-ingresos">Por favor, introduce una cantidad válida</div>
                         <div class="info-text">IPREM anual de referencia: 7.200 €</div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="edad">3. Edad del solicitante principal</label>
                         <input type="number" id="edad" placeholder="Ej: 33" min="18" max="100">
+                        <div class="error-message" id="error-edad">La edad debe estar entre 18 y 100 años</div>
                     </div>
 
                     <div class="form-group">
@@ -1002,8 +1049,11 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-calcular" onclick="calcularPuntos()">Calcular mi
-                        puntuación</button>
+                    <div class="loading-indicator" id="loading-indicator">
+                        <i class="fas fa-spinner fa-spin"></i> Calculando puntuación...
+                    </div>
+
+                    <button type="button" class="btn-calcular" onclick="calcularPuntos()">Calcular mi puntuación</button>
                 </form>
 
                 <div id="resultado" class="resultado">
@@ -1133,8 +1183,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Resto de secciones (cupos, faq, legal, contacto) -->
 
         <!-- Sección de cupos (oculta por defecto) -->
         <div id="seccion-cupos" class="seccion-cupos">
@@ -1270,6 +1318,36 @@
             </div>
         </div>
 
+        <!-- Nueva sección para el Reglamento Municipal -->
+        <div id="seccion-reglamento-municipal" class="seccion-legal">
+            <div class="card">
+                <h2>Reglamento Municipal de Vivienda Protegida</h2>
+                <p style="margin-bottom: 20px; color: var(--texto-medio);">Consulta el reglamento específico del municipio de Herrera que regula el Registro de Demandantes de Viviendas Protegidas.</p>
+
+                <div class="documentos-legales">
+                    <div class="documento-card">
+                        <h3>Reglamento Regulador del Registro de Demandantes</h3>
+                        <p>Reglamento municipal que establece las normas específicas para la gestión del registro de demandantes de viviendas protegidas en Herrera.</p>
+                        <a href="reglamento-municipal.pdf" download="Reglamento-Municipal-VPO-Herrera.pdf" class="btn-documento">Descargar Reglamento Municipal</a>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>Contenido del Reglamento Municipal</h3>
+                    <p>El Reglamento Municipal de Herrera incluye disposiciones específicas sobre:</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Requisitos para la inscripción en el registro municipal</li>
+                        <li>Procedimiento de solicitud y documentación necesaria</li>
+                        <li>Criterios de baremación adaptados al municipio</li>
+                        <li>Normas sobre los cupos de adjudicación</li>
+                        <li>Procedimientos de reclamación y recursos</li>
+                    </ul>
+                    
+                    <h3>Vigencia y aplicación</h3>
+                    <p>Este reglamento se aplica en coordinación con la normativa autonómica y estatal, adaptando las disposiciones generales a las particularidades del municipio de Herrera.</p>
+                </div>
+            </div>
+        </div>
 
         <!-- Sección de Preguntas Frecuentes (oculta por defecto) -->
         <div id="seccion-faq" class="seccion-faq">
@@ -1415,8 +1493,6 @@
             </div>
         </div>
 
-
-
         <!-- Sección de contacto (oculta por defecto) -->
         <div id="seccion-contacto" class="seccion-contacto">
             <div class="card">
@@ -1481,65 +1557,62 @@
         let todasLasSolicitudes = [];
         let solicitudUsuario = null;
 
-       // Cargar solicitudes guardadas al iniciar
-    function cargarSolicitudesGuardadas() {
-        let solicitudesGuardadas = localStorage.getItem('todasLasSolicitudes');
-        
-        if (solicitudesGuardadas) {
-            todasLasSolicitudes = JSON.parse(solicitudesGuardadas);
-        } else {
-            // Intenta recuperar de sessionStorage
-            const respaldo = sessionStorage.getItem('solicitudes_respaldo');
-            if (respaldo) {
-                todasLasSolicitudes = JSON.parse(respaldo);
-                guardarSolicitudes(); // Vuelve a guardar en localStorage
-                console.log('Datos recuperados del respaldo de sesión');
+        // Cargar solicitudes guardadas al iniciar
+        function cargarSolicitudesGuardadas() {
+            let solicitudesGuardadas = localStorage.getItem('todasLasSolicitudes');
+            
+            if (solicitudesGuardadas) {
+                todasLasSolicitudes = JSON.parse(solicitudesGuardadas);
+            } else {
+                // Intenta recuperar de sessionStorage
+                const respaldo = sessionStorage.getItem('solicitudes_respaldo');
+                if (respaldo) {
+                    todasLasSolicitudes = JSON.parse(respaldo);
+                    guardarSolicitudes(); // Vuelve a guardar en localStorage
+                    console.log('Datos recuperados del respaldo de sesión');
+                }
             }
+            
+            // Limpiar backups muy antiguos (opcional)
+            limpiarBackupsAntiguos();
         }
-        
-        // Limpiar backups muy antiguos (opcional)
-        limpiarBackupsAntiguos();
-    }
 
+        // Guardar todas las solicitudes
+        function guardarSolicitudes() {
+            localStorage.setItem('todasLasSolicitudes', JSON.stringify(todasLasSolicitudes));
+            hacerBackup(); // Hace backup automáticamente
+        }
 
-        /// Guardar todas las solicitudes
-    function guardarSolicitudes() {
-        localStorage.setItem('todasLasSolicitudes', JSON.stringify(todasLasSolicitudes));
-        hacerBackup(); // Hace backup automáticamente
-    }
+        // Backup automático
+        function hacerBackup() {
+            const timestamp = new Date().toISOString().split('T')[0]; // Fecha como YYYY-MM-DD
+            localStorage.setItem(`backup_${timestamp}`, JSON.stringify(todasLasSolicitudes));
+            
+            // Copia adicional en sessionStorage
+            sessionStorage.setItem('solicitudes_respaldo', JSON.stringify(todasLasSolicitudes));
+        }
 
-
-        // Añade estas nuevas funciones después de guardarSolicitudes():
-    
-    // Backup automático
-    function hacerBackup() {
-        const timestamp = new Date().toISOString().split('T')[0]; // Fecha como YYYY-MM-DD
-        localStorage.setItem(`backup_${timestamp}`, JSON.stringify(todasLasSolicitudes));
-        
-        // Copia adicional en sessionStorage
-        sessionStorage.setItem('solicitudes_respaldo', JSON.stringify(todasLasSolicitudes));
-    }
-
-    // Limpiar backups de más de 7 días
-    function limpiarBackupsAntiguos() {
-        const hoy = new Date();
-        const sieteDias = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('backup_')) {
-                const fechaBackup = new Date(key.replace('backup_', ''));
-                if (hoy - fechaBackup > sieteDias) {
-                    localStorage.removeItem(key);
+        // Limpiar backups de más de 7 días
+        function limpiarBackupsAntiguos() {
+            const hoy = new Date();
+            const sieteDias = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('backup_')) {
+                    const fechaBackup = new Date(key.replace('backup_', ''));
+                    if (hoy - fechaBackup > sieteDias) {
+                        localStorage.removeItem(key);
+                    }
                 }
             }
         }
-    }
 
         // Inicializar la página
         document.addEventListener('DOMContentLoaded', function () {
             cargarSolicitudesGuardadas();
             cargarListadosSolicitantes();
+            inicializarValidaciones();
         });
 
         // Protección contra cierre accidental
@@ -1549,8 +1622,72 @@
                 e.returnValue = '';
             }
         });
-    
 
+        // Inicializar validaciones de formulario
+        function inicializarValidaciones() {
+            const camposRequeridos = ['ano_inscripcion', 'ingresos_anuales', 'edad'];
+            
+            camposRequeridos.forEach(campoId => {
+                const campo = document.getElementById(campoId);
+                campo.addEventListener('blur', function() {
+                    validarCampo(this);
+                });
+            });
+        }
+
+        // Validar campo individual
+        function validarCampo(campo) {
+            const valor = campo.value.trim();
+            const errorElement = document.getElementById(`error-${campo.id}`);
+            
+            // Limpiar estado anterior
+            campo.classList.remove('input-error');
+            errorElement.style.display = 'none';
+            
+            // Validaciones específicas
+            if (campo.id === 'ano_inscripcion') {
+                const anoActual = new Date().getFullYear();
+                if (!valor || valor < 1990 || valor > anoActual) {
+                    mostrarError(campo, errorElement);
+                    return false;
+                }
+            } else if (campo.id === 'ingresos_anuales') {
+                if (!valor || valor < 0) {
+                    mostrarError(campo, errorElement);
+                    return false;
+                }
+            } else if (campo.id === 'edad') {
+                if (!valor || valor < 18 || valor > 100) {
+                    mostrarError(campo, errorElement);
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Mostrar error en campo
+        function mostrarError(campo, errorElement) {
+            campo.classList.add('input-error');
+            errorElement.style.display = 'block';
+        }
+
+        // Validar formulario completo
+        function validarFormulario() {
+            const camposRequeridos = ['ano_inscripcion', 'ingresos_anuales', 'edad'];
+            let esValido = true;
+            
+            camposRequeridos.forEach(campoId => {
+                const campo = document.getElementById(campoId);
+                if (!validarCampo(campo)) {
+                    esValido = false;
+                }
+            });
+            
+            return esValido;
+        }
+
+        
 
         // Menú hamburguesa para móviles
         document.getElementById('hamburger').addEventListener('click', function () {
@@ -1668,129 +1805,144 @@
                 lista.appendChild(item);
             });
         }
+
         function calcularPuntos() {
-            // Valor IPREM de referencia
-            const IPREM_ANUAL = 7200.0;
-
-            let totalPuntos = 0;
-
-            // 1. Antigüedad
-            const anoActual = new Date().getFullYear();
-            const anoInscripcion = parseInt(document.getElementById('ano_inscripcion').value);
-
-            if (!isNaN(anoInscripcion) && anoInscripcion <= anoActual) {
-                const anosAntiguedad = anoActual - anoInscripcion;
-                const puntosAntiguedad = Math.min(Math.max(0, anosAntiguedad), 5); // 1 pto/año, max 5
-                totalPuntos += puntosAntiguedad;
+            // Validar formulario antes de calcular
+            if (!validarFormulario()) {
+                alert('Por favor, complete correctamente todos los campos obligatorios.');
+                return;
             }
 
-            // 2. Ingresos
-            const ingresos = parseFloat(document.getElementById('ingresos_anuales').value);
+            // Mostrar indicador de carga
+            const loadingIndicator = document.getElementById('loading-indicator');
+            loadingIndicator.style.display = 'block';
 
-            if (!isNaN(ingresos)) {
-                const ratioIPREM = ingresos / IPREM_ANUAL;
+            // Simular procesamiento (en un caso real, esto sería instantáneo)
+            setTimeout(() => {
+                // Valor IPREM de referencia
+                const IPREM_ANUAL = 7200.0;
 
-                if (ratioIPREM < 1.2) {
-                    totalPuntos += 5;
-                } else if (ratioIPREM <= 2.5) {
+                let totalPuntos = 0;
+
+                // 1. Antigüedad
+                const anoActual = new Date().getFullYear();
+                const anoInscripcion = parseInt(document.getElementById('ano_inscripcion').value);
+
+                if (!isNaN(anoInscripcion) && anoInscripcion <= anoActual) {
+                    const anosAntiguedad = anoActual - anoInscripcion;
+                    const puntosAntiguedad = Math.min(Math.max(0, anosAntiguedad), 5); // 1 pto/año, max 5
+                    totalPuntos += puntosAntiguedad;
+                }
+
+                // 2. Ingresos
+                const ingresos = parseFloat(document.getElementById('ingresos_anuales').value);
+
+                if (!isNaN(ingresos)) {
+                    const ratioIPREM = ingresos / IPREM_ANUAL;
+
+                    if (ratioIPREM < 1.2) {
+                        totalPuntos += 5;
+                    } else if (ratioIPREM <= 2.5) {
+                        totalPuntos += 3;
+                    } else if (ratioIPREM <= 3.5) {
+                        totalPuntos += 1;
+                    }
+                }
+
+                // 3. Situación familiar
+                const situacion = document.getElementById('situacion_familiar').value;
+
+                if (situacion === 'monoparental' || situacion === 'numerosa') {
                     totalPuntos += 3;
-                } else if (ratioIPREM <= 3.5) {
+                } else if (situacion === 'solo_progenitor') {
+                    totalPuntos += 2;
+                } else if (situacion === 'pareja_joven') {
                     totalPuntos += 1;
                 }
-            }
 
-            // 3. Situación familiar
-            const situacion = document.getElementById('situacion_familiar').value;
+                // 4. Discapacidad
+                if (document.getElementById('discapacidad').checked) {
+                    totalPuntos += 3;
+                }
 
-            if (situacion === 'monoparental' || situacion === 'numerosa') {
-                totalPuntos += 3;
-            } else if (situacion === 'solo_progenitor') {
-                totalPuntos += 2;
-            } else if (situacion === 'pareja_joven') {
-                totalPuntos += 1;
-            }
+                // 5. Violencia de género
+                if (document.getElementById('violencia_genero').checked) {
+                    totalPuntos += 3;
+                }
 
-            // 4. Discapacidad
-            if (document.getElementById('discapacidad').checked) {
-                totalPuntos += 3;
-            }
+                // 6. Edad
+                const edad = parseInt(document.getElementById('edad').value);
 
-            // 5. Violencia de género
-            if (document.getElementById('violencia_genero').checked) {
-                totalPuntos += 3;
-            }
+                if (!isNaN(edad)) {
+                    if (edad < 35 || edad > 65) {
+                        totalPuntos += 2;
+                    }
+                }
 
-            // 6. Edad
-            const edad = parseInt(document.getElementById('edad').value);
+                // 7. Situación residencial
+                const vivienda = document.getElementById('vivienda_actual').value;
 
-            if (!isNaN(edad)) {
-                if (edad < 35 || edad > 65) {
+                if (vivienda === 'inadecuada') {
+                    totalPuntos += 3;
+                } else if (vivienda === 'alquiler_caro') {
                     totalPuntos += 2;
                 }
-            }
 
-            // 7. Situación residencial
-            const vivienda = document.getElementById('vivienda_actual').value;
+                // Crear solicitud del usuario
+                const cuposAplicables = determinarCuposAplicables();
+                const numeroSolicitud = generarNumeroSolicitud(cuposAplicables[0], totalPuntos);
 
-            if (vivienda === 'inadecuada') {
-                totalPuntos += 3;
-            } else if (vivienda === 'alquiler_caro') {
-                totalPuntos += 2;
-            }
+                const nuevaSolicitud = {
+                    numero: numeroSolicitud,
+                    puntos: totalPuntos,
+                    cupos: cuposAplicables
+                };
 
-            // Crear solicitud del usuario
-            const cuposAplicables = determinarCuposAplicables();
-            const numeroSolicitud = generarNumeroSolicitud(cuposAplicables[0], totalPuntos);
+                // Guardar solicitud localmente
+                solicitudUsuario = nuevaSolicitud;
 
-            const nuevaSolicitud = {
-                numero: numeroSolicitud,
-                puntos: totalPuntos,
-                cupos: cuposAplicables
-            };
+                // Añadir a la lista general de solicitudes (evitando duplicados)
+                const existe = todasLasSolicitudes.find(s => s.numero === nuevaSolicitud.numero);
+                if (!existe) {
+                    todasLasSolicitudes.push(nuevaSolicitud);
+                    guardarSolicitudes(); // Guardar en localStorage
+                }
 
-            // Guardar solicitud localmente
-            solicitudUsuario = nuevaSolicitud;
+                // Mostrar resultado
+                const resultadoDiv = document.getElementById('resultado');
 
-            // Añadir a la lista general de solicitudes (evitando duplicados)
-            const existe = todasLasSolicitudes.find(s => s.numero === nuevaSolicitud.numero);
-            if (!existe) {
-                todasLasSolicitudes.push(nuevaSolicitud);
-                guardarSolicitudes(); // Guardar en localStorage
-            }
+                // Muestra el total de puntos
+                document.getElementById('puntos_obtenidos').innerText = totalPuntos;
 
-            // Mostrar resultado
-            const resultadoDiv = document.getElementById('resultado');
+                // Muestra el mensaje de probabilidad
+                const mensajeP = document.getElementById('mensaje_probabilidad');
 
-            // Muestra el total de puntos
-            document.getElementById('puntos_obtenidos').innerText = totalPuntos;
+                if (totalPuntos > 17) {
+                    mensajeP.innerText = "Probabilidad Alta";
+                    mensajeP.className = "mensaje-probabilidad alta";
+                } else if (totalPuntos >= 12) {
+                    mensajeP.innerText = "Probabilidad Media";
+                    mensajeP.className = "mensaje-probabilidad media";
+                } else {
+                    mensajeP.innerText = "Probabilidad Baja";
+                    mensajeP.className = "mensaje-probabilidad baja";
+                }
 
-            // Muestra el mensaje de probabilidad
-            const mensajeP = document.getElementById('mensaje_probabilidad');
+                // Calcular y mostrar posición en cupos
+                mostrarPosicionCupos(totalPuntos);
 
-            if (totalPuntos > 17) {
-                mensajeP.innerText = "Probabilidad Alta";
-                mensajeP.className = "mensaje-probabilidad alta";
-            } else if (totalPuntos >= 12) {
-                mensajeP.innerText = "Probabilidad Media";
-                mensajeP.className = "mensaje-probabilidad media";
-            } else {
-                mensajeP.innerText = "Probabilidad Baja";
-                mensajeP.className = "mensaje-probabilidad baja";
-            }
+                resultadoDiv.style.display = 'block'; // Mostrar el bloque de resultados
 
-            // Calcular y mostrar posición en cupos
-            mostrarPosicionCupos(totalPuntos);
+                // Actualizar listados en la sección de consulta
+                cargarListadosSolicitantes();
 
-            resultadoDiv.style.display = 'block'; // Mostrar el bloque de resultados
+                // Mostrar mensaje informativo sobre el número de solicitud
+                mostrarInfoSolicitud(numeroSolicitud);
 
-            // Actualizar listados en la sección de consulta
-            cargarListadosSolicitantes();
-
-            // Mostrar mensaje informativo sobre el número de solicitud
-            mostrarInfoSolicitud(numeroSolicitud);
+                // Ocultar indicador de carga
+                loadingIndicator.style.display = 'none';
+            }, 800); // Simular un pequeño retardo para mejor experiencia de usuario
         }
-
-
 
         function mostrarInfoSolicitud(numeroSolicitud) {
             const infoDiv = document.createElement('div');
@@ -1902,8 +2054,6 @@
             // Si no supera a nadie, está al final
             return puntosOrdenados.length + 1;
         }
-
-        
     </script>
 </body>
 
