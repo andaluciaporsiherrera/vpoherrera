@@ -132,7 +132,7 @@
             display: none;
             position: absolute;
             background-color: var(--blanco);
-            min-width: 220px;
+            min-width: 280px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
             z-index: 1;
@@ -953,15 +953,51 @@
                     </a>
                     <div class="dropdown-content">
                         <a href="#legal" data-seccion="legal"><i class="fas fa-balance-scale"></i> Marco Legal</a>
-                        <a href="reglamento-municipal.pdf" download="Reglamento-Municipal-VPO-Herrera.pdf"><i class="fas fa-file-contract"></i> Reglamento Municipal</a>
+
+                        <a href="https://app.congreso.es/consti/constitucion/indice/titulos/articulos.jsp?ini=47&tipo=2"
+                          target="_blank"><i class="fa-solid fa-building-columns"></i></i> Título I. Constitución
+                            Española.</a>
+
+                        <a href="https://www.boe.es/eli/es/l/1985/04/02/7/con" target="_blank"><i
+                              class="fa-solid fa-building-columns"></i> Título IV. Constitución Española.</a>
+
                         <a href="https://www.juntadeandalucia.es/boja/2012/11/1" target="_blank"><i
-                              class="fas fa-file-pdf"></i> Decreto 1/2012</a>
-                        <a href="https://www.juntadeandalucia.es/boja/2010/45/1" target="_blank"><i
-                              class="fas fa-file-pdf"></i> Orden 1/3/2010</a>
-                        <a href="https://www.dipusevilla.es/area/urbanismo/vivienda/ordenanzas-municipales"
-                          target="_blank"><i class="fas fa-file-contract"></i> Ordenanza 2013</a>
-                        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2010-9279" target="_blank"><i
-                              class="fas fa-landmark"></i> Ley 1/2010</a>
+                              class="fa-solid fa-building"></i>Ley 7/1985, de 2 de abril, Reguladora de las Bases del
+                            Régimen Local.</a>
+
+                        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2015-10565" target="_blank"><i
+                              class="fa-solid fa-building"></i> Ley 39/2015, de 1 de octubre, del Procedimiento
+                            Administrativo Común de las Administraciones Públicas.
+                        </a>
+
+                        <a href="reglamento-registro-demandantes.pdf" download="reglamento-registro-demandantes.pdf"><i
+                              class="fas fa-file-pdf"></i> Decreto 1-2012, de 10 de enero, Reglamento Regulador de los
+                            Registros de Demandantes de vivienda protegida</a>
+
+
+                        <a href="https://boe.es/buscar/act.php?id=BOE-A-2015-10566&tn=5&bj=a31" target="_blank"><i
+                              class="fa-solid fa-scale-balanced"></i> Ley 40/2015, de 1 de octubre, de Régimen Jurídico
+                            del Sector Público.</a>
+
+
+                        <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2004-12010" target="_blank"><i
+                              class="fa-solid fa-money-bill-wave"></i>Real Decreto-ley 3/2004, de 25 de junio, para la
+                            racionalización de la regulación del salario mínimo interprofesional y para el incremento de
+                            su cuantía.
+                        </a>
+
+                        <a href="Decreto-Parque-Público-Andalucia.pdf"
+                          download="Decreto-Parque-Público-Andalucia.pdf"><i class="fas fa-file-contract"></i>Decreto
+                            161-2018, de 28 de agosto, de defensa de la vivienda del parque público residencial de la
+                            Comunidad Autónoma de Andalucía, modifica el 149-2006 y el 1-2012-1</a>
+
+                        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2005-20662"
+                          target="_blank"><i class="fas fa-file-contract"></i>Ley 13/2005, de 11 de noviembre, de medidas para la vivienda protegida y el suelo.
+</a>
+                        
+                        <a href="Reglamento-regulador-Herrera.pdf"
+                          download="Reglamento-regulador-Herrera.pdf"><i class="fas fa-file-contract"></i>Reglamento Regulador Del Registro de Demandantes de Viviendas Protegidas del Municipio de Herrera
+                        </a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -996,7 +1032,8 @@
                     <div class="form-group required">
                         <label for="ano_inscripcion">1. Año de inscripción en el Registro</label>
                         <input type="number" id="ano_inscripcion" placeholder="Ej: 2019" min="1990" max="2024">
-                        <div class="error-message" id="error-ano">Por favor, introduce un año válido entre 1990 y 2024</div>
+                        <div class="error-message" id="error-ano">Por favor, introduce un año válido entre 1990 y 2024
+                        </div>
                         <div class="info-text">Se asignará 1 punto por cada año completo de antigüedad (máximo 5 puntos)
                         </div>
                     </div>
@@ -1053,7 +1090,8 @@
                         <i class="fas fa-spinner fa-spin"></i> Calculando puntuación...
                     </div>
 
-                    <button type="button" class="btn-calcular" onclick="calcularPuntos()">Calcular mi puntuación</button>
+                    <button type="button" class="btn-calcular" onclick="calcularPuntos()">Calcular mi
+                        puntuación</button>
                 </form>
 
                 <div id="resultado" class="resultado">
@@ -1322,13 +1360,16 @@
         <div id="seccion-reglamento-municipal" class="seccion-legal">
             <div class="card">
                 <h2>Reglamento Municipal de Vivienda Protegida</h2>
-                <p style="margin-bottom: 20px; color: var(--texto-medio);">Consulta el reglamento específico del municipio de Herrera que regula el Registro de Demandantes de Viviendas Protegidas.</p>
+                <p style="margin-bottom: 20px; color: var(--texto-medio);">Consulta el reglamento específico del
+                    municipio de Herrera que regula el Registro de Demandantes de Viviendas Protegidas.</p>
 
                 <div class="documentos-legales">
                     <div class="documento-card">
                         <h3>Reglamento Regulador del Registro de Demandantes</h3>
-                        <p>Reglamento municipal que establece las normas específicas para la gestión del registro de demandantes de viviendas protegidas en Herrera.</p>
-                        <a href="reglamento-municipal.pdf" download="Reglamento-Municipal-VPO-Herrera.pdf" class="btn-documento">Descargar Reglamento Municipal</a>
+                        <p>Reglamento municipal que establece las normas específicas para la gestión del registro de
+                            demandantes de viviendas protegidas en Herrera.</p>
+                        <a href="reglamento-municipal.pdf" download="Reglamento-Municipal-VPO-Herrera.pdf"
+                          class="btn-documento">Descargar Reglamento Municipal</a>
                     </div>
                 </div>
 
@@ -1342,9 +1383,10 @@
                         <li>Normas sobre los cupos de adjudicación</li>
                         <li>Procedimientos de reclamación y recursos</li>
                     </ul>
-                    
+
                     <h3>Vigencia y aplicación</h3>
-                    <p>Este reglamento se aplica en coordinación con la normativa autonómica y estatal, adaptando las disposiciones generales a las particularidades del municipio de Herrera.</p>
+                    <p>Este reglamento se aplica en coordinación con la normativa autonómica y estatal, adaptando las
+                        disposiciones generales a las particularidades del municipio de Herrera.</p>
                 </div>
             </div>
         </div>
@@ -1560,7 +1602,7 @@
         // Cargar solicitudes guardadas al iniciar
         function cargarSolicitudesGuardadas() {
             let solicitudesGuardadas = localStorage.getItem('todasLasSolicitudes');
-            
+
             if (solicitudesGuardadas) {
                 todasLasSolicitudes = JSON.parse(solicitudesGuardadas);
             } else {
@@ -1572,7 +1614,7 @@
                     console.log('Datos recuperados del respaldo de sesión');
                 }
             }
-            
+
             // Limpiar backups muy antiguos (opcional)
             limpiarBackupsAntiguos();
         }
@@ -1587,7 +1629,7 @@
         function hacerBackup() {
             const timestamp = new Date().toISOString().split('T')[0]; // Fecha como YYYY-MM-DD
             localStorage.setItem(`backup_${timestamp}`, JSON.stringify(todasLasSolicitudes));
-            
+
             // Copia adicional en sessionStorage
             sessionStorage.setItem('solicitudes_respaldo', JSON.stringify(todasLasSolicitudes));
         }
@@ -1596,7 +1638,7 @@
         function limpiarBackupsAntiguos() {
             const hoy = new Date();
             const sieteDias = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
-            
+
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 if (key && key.startsWith('backup_')) {
@@ -1616,7 +1658,7 @@
         });
 
         // Protección contra cierre accidental
-        window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', function (e) {
             if (todasLasSolicitudes.length > 0) {
                 e.preventDefault();
                 e.returnValue = '';
@@ -1626,10 +1668,10 @@
         // Inicializar validaciones de formulario
         function inicializarValidaciones() {
             const camposRequeridos = ['ano_inscripcion', 'ingresos_anuales', 'edad'];
-            
+
             camposRequeridos.forEach(campoId => {
                 const campo = document.getElementById(campoId);
-                campo.addEventListener('blur', function() {
+                campo.addEventListener('blur', function () {
                     validarCampo(this);
                 });
             });
@@ -1639,11 +1681,11 @@
         function validarCampo(campo) {
             const valor = campo.value.trim();
             const errorElement = document.getElementById(`error-${campo.id}`);
-            
+
             // Limpiar estado anterior
             campo.classList.remove('input-error');
             errorElement.style.display = 'none';
-            
+
             // Validaciones específicas
             if (campo.id === 'ano_inscripcion') {
                 const anoActual = new Date().getFullYear();
@@ -1662,7 +1704,7 @@
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -1676,18 +1718,18 @@
         function validarFormulario() {
             const camposRequeridos = ['ano_inscripcion', 'ingresos_anuales', 'edad'];
             let esValido = true;
-            
+
             camposRequeridos.forEach(campoId => {
                 const campo = document.getElementById(campoId);
                 if (!validarCampo(campo)) {
                     esValido = false;
                 }
             });
-            
+
             return esValido;
         }
 
-        
+
 
         // Menú hamburguesa para móviles
         document.getElementById('hamburger').addEventListener('click', function () {
