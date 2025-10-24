@@ -1006,6 +1006,48 @@
         flex-direction: column;
       }
     }
+
+    /* Estilos para el limitador de solicitudes */
+.limitador-solicitudes {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    border-left: 4px solid #ffc107;
+    display: none;
+}
+
+.limitador-solicitudes h4 {
+    color: #856404;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.limitador-solicitudes p {
+    color: #856404;
+    margin: 5px 0;
+}
+
+.tiempo-restante {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #dc3545;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.btn-deshabilitado {
+    background-color: #6c757d !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+.btn-deshabilitado:hover {
+    background-color: #6c757d !important;
+}
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -1087,17 +1129,15 @@
 
         <form id="simulador-form">
           <div class="form-group required">
-            <label for="ano_inscripcion">1. Año de inscripción en el
-              Registro</label>
-            <input type="number" id="ano_inscripcion" placeholder="Ej: 2019" min="1990" max="2024" />
-            <div class="error-message" id="error-ano">
-              Por favor, introduce un año válido entre 1990 y 2024
-            </div>
-            <div class="info-text">
-              Se asignará 1 punto por cada año completo de antigüedad (máximo
-              5 puntos)
-            </div>
-          </div>
+  <label for="ano_inscripcion">1. Año de inscripción en el Registro</label>
+  <input type="number" id="ano_inscripcion" placeholder="Ej: 2019" min="2000" />
+  <div class="error-message" id="error-ano">
+    Por favor, introduce un año válido entre 2000 y el año actual
+  </div>
+  <div class="info-text">
+    Se asignará 1 punto por cada año completo de antigüedad (máximo 5 puntos)
+  </div>
+</div>
 
           <div class="form-group required">
             <label for="ingresos_anuales">2. Ingresos familiares anuales
@@ -1172,9 +1212,9 @@
             <i class="fas fa-spinner fa-spin"></i> Calculando puntuación...
           </div>
 
-          <button type="button" class="btn-calcular" onclick="calcularPuntos()">
-            Calcular mi puntuación
-          </button>
+          <button type="button" class="btn-calcular" id="btn-calcular" onclick="calcularPuntos()">
+    Calcular mi puntuación
+</button>
         </form>
 
         <div id="resultado" class="resultado">
@@ -1934,39 +1974,7 @@
       }
     }
 
-    // Inicializar la página
-    document.addEventListener("DOMContentLoaded", async function () {
-      console.log("Inicializando página...");
-
-      // Inicializar navegación PRIMERO
-      inicializarNavegacion();
-
-      // Luego el resto de inicializaciones
-      inicializarFAQ();
-      cargarSolicitudesGuardadas();
-
-      // Intentar cargar del servidor
-      try {
-        const solicitudesServidor = await cargarSolicitudesServidor();
-        if (solicitudesServidor.length > 0) {
-          todasLasSolicitudes = solicitudesServidor;
-          guardarSolicitudesLocal(); // Backup local
-          console.log("Datos cargados del servidor:", todasLasSolicitudes.length, "solicitudes");
-        } else {
-          console.log("Servidor no devolvió datos, manteniendo datos locales");
-        }
-      } catch (error) {
-        console.log("Error cargando del servidor, usando datos locales:", error.message);
-      }
-
-      cargarListadosSolicitantes();
-      inicializarValidaciones();
-
-      // Agregar evento al botón calcular
-      document.querySelector(".btn-calcular").addEventListener("click", calcularPuntos);
-
-      console.log("Página inicializada correctamente");
-    });
+   
 
     // Inicializar navegación - CORREGIDA
     function inicializarNavegacion() {
@@ -2081,10 +2089,10 @@
 
       let valido = true;
 
-      if (!anoInscripcion || anoInscripcion < 1990 || anoInscripcion > 2024) {
-        mostrarError("ano_inscripcion", "Por favor, introduce un año de inscripción válido entre 1990 y 2024");
+       if (!anoInscripcion || anoInscripcion < 2000 || anoInscripcion > new Date().getFullYear()) {
+        mostrarError("ano_inscripcion", `Por favor, introduce un año de inscripción válido entre 2000 y ${new Date().getFullYear()}`);
         valido = false;
-      }
+    }
 
       if (!ingresos || ingresos < 0 || isNaN(ingresos)) {
         mostrarError("ingresos_anuales", "Por favor, introduce unos ingresos válidos");
@@ -2114,21 +2122,31 @@
       }
     }
 
-    // FUNCIÓN PRINCIPAL MEJORADA
-    async function calcularPuntos() {
-      console.log("Calculando puntos...");
+    // FUNCIÓN PRINCIPAL MEJORADA CON LIMITADOR DE SOLICITUDES
+async function calcularPuntos() {
+    console.log("Calculando puntos...");
 
-      if (!validarFormulario()) {
+    // Verificar limitación local primero
+    if (!verificarLimitacionLocal()) {
         return;
-      }
+    }
 
-      const loadingIndicator = document.getElementById("loading-indicator");
-      if (loadingIndicator) {
+    if (!validarFormulario()) {
+        return;
+    }
+
+    const loadingIndicator = document.getElementById("loading-indicator");
+    if (loadingIndicator) {
         loadingIndicator.style.display = "block";
-      }
+    }
 
-      try {
-        // Calcular puntos
+    // Deshabilitar botón temporalmente
+    const btnCalcular = document.querySelector('.btn-calcular');
+    btnCalcular.disabled = true;
+    btnCalcular.classList.add('btn-deshabilitado');
+
+    try {
+        // Calcular puntos (tu código existente)
         const IPREM_ANUAL = 7200.0;
         let totalPuntos = 0;
 
@@ -2136,17 +2154,17 @@
         const anoActual = new Date().getFullYear();
         const anoInscripcion = parseInt(document.getElementById("ano_inscripcion").value);
         if (!isNaN(anoInscripcion) && anoInscripcion <= anoActual) {
-          const anosAntiguedad = anoActual - anoInscripcion;
-          totalPuntos += Math.min(Math.max(0, anosAntiguedad), 5);
+            const anosAntiguedad = anoActual - anoInscripcion;
+            totalPuntos += Math.min(Math.max(0, anosAntiguedad), 5);
         }
 
         // 2. Ingresos
         const ingresos = parseFloat(document.getElementById("ingresos_anuales").value);
         if (!isNaN(ingresos)) {
-          const ratioIPREM = ingresos / IPREM_ANUAL;
-          if (ratioIPREM < 1.2) totalPuntos += 5;
-          else if (ratioIPREM <= 2.5) totalPuntos += 3;
-          else if (ratioIPREM <= 3.5) totalPuntos += 1;
+            const ratioIPREM = ingresos / IPREM_ANUAL;
+            if (ratioIPREM < 1.2) totalPuntos += 5;
+            else if (ratioIPREM <= 2.5) totalPuntos += 3;
+            else if (ratioIPREM <= 3.5) totalPuntos += 1;
         }
 
         // 3. Situación familiar
@@ -2177,71 +2195,168 @@
         const numeroSolicitud = generarNumeroSolicitud(cuposAplicables[0], totalPuntos);
 
         const nuevaSolicitud = {
-          numero: numeroSolicitud,
-          puntos: totalPuntos,
-          cupos: cuposAplicables,
-          datos_usuario: {
-            ano_inscripcion: document.getElementById("ano_inscripcion").value,
-            ingresos_anuales: document.getElementById("ingresos_anuales").value,
-            edad: document.getElementById("edad").value,
-            situacion_familiar: document.getElementById("situacion_familiar").value,
-            vivienda_actual: document.getElementById("vivienda_actual").value,
-            discapacidad: document.getElementById("discapacidad").checked,
-            violencia_genero: document.getElementById("violencia_genero").checked,
-            timestamp: new Date().toISOString(),
-          },
+            numero: numeroSolicitud,
+            puntos: totalPuntos,
+            cupos: cuposAplicables,
+            datos_usuario: {
+                ano_inscripcion: document.getElementById("ano_inscripcion").value,
+                ingresos_anuales: document.getElementById("ingresos_anuales").value,
+                edad: document.getElementById("edad").value,
+                situacion_familiar: document.getElementById("situacion_familiar").value,
+                vivienda_actual: document.getElementById("vivienda_actual").value,
+                discapacidad: document.getElementById("discapacidad").checked,
+                violencia_genero: document.getElementById("violencia_genero").checked,
+                timestamp: new Date().toISOString(),
+            },
         };
 
-        // Guardar en servidor (con manejo mejorado de errores)
+        // Guardar en servidor (con limitación por IP)
         try {
-          await guardarSolicitudServidor(nuevaSolicitud);
-          console.log("Solicitud guardada exitosamente en el servidor");
+            const resultado = await guardarSolicitudServidor(nuevaSolicitud);
+            
+            // Registrar éxito localmente
+            registrarEnvioExitoso();
+            
+            console.log("Solicitud guardada exitosamente en el servidor");
         } catch (serverError) {
-          console.warn("No se pudo guardar en el servidor, usando almacenamiento local:", serverError.message);
-          // Continuamos con el almacenamiento local
+            // Si es error 429 (demasiadas solicitudes), mostrar mensaje específico
+            if (serverError.message.includes('429') || serverError.message.includes('esperar')) {
+                mostrarLimitacionTiempo(serverError.message);
+                return;
+            }
+            
+            console.warn("No se pudo guardar en el servidor, usando almacenamiento local:", serverError.message);
+            // Continuamos con el almacenamiento local
+            registrarEnvioExitoso();
         }
 
         // Actualizar datos locales
         solicitudUsuario = nuevaSolicitud;
         const existe = todasLasSolicitudes.find((s) => s.numero === nuevaSolicitud.numero);
         if (!existe) {
-          todasLasSolicitudes.push(nuevaSolicitud);
-          guardarSolicitudesLocal();
-        }
-
-        // Recargar desde servidor para tener datos actualizados (opcional)
-        try {
-          const solicitudesActualizadas = await cargarSolicitudesServidor();
-          if (solicitudesActualizadas.length > 0) {
-            todasLasSolicitudes = solicitudesActualizadas;
+            todasLasSolicitudes.push(nuevaSolicitud);
             guardarSolicitudesLocal();
-            console.log("Datos actualizados desde el servidor");
-          }
-        } catch (error) {
-          console.log("No se pudieron actualizar los datos del servidor, usando locales");
         }
 
         // Mostrar resultado
         mostrarResultado(totalPuntos, numeroSolicitud);
-      } catch (error) {
+
+    } catch (error) {
         console.error("Error general:", error);
         alert("Error: " + error.message + "\nLos datos se guardaron localmente.");
 
         // Fallback local
         if (solicitudUsuario) {
-          const existe = todasLasSolicitudes.find((s) => s.numero === solicitudUsuario.numero);
-          if (!existe) {
-            todasLasSolicitudes.push(solicitudUsuario);
-            guardarSolicitudesLocal();
-          }
-          mostrarResultado(solicitudUsuario.puntos, solicitudUsuario.numero);
+            const existe = todasLasSolicitudes.find((s) => s.numero === solicitudUsuario.numero);
+            if (!existe) {
+                todasLasSolicitudes.push(solicitudUsuario);
+                guardarSolicitudesLocal();
+            }
+            mostrarResultado(solicitudUsuario.puntos, solicitudUsuario.numero);
         }
-      } finally {
+    } finally {
         if (loadingIndicator) {
-          loadingIndicator.style.display = "none";
+            loadingIndicator.style.display = "none";
         }
-      }
+        // Re-habilitar botón
+        btnCalcular.disabled = false;
+        btnCalcular.classList.remove('btn-deshabilitado');
     }
+}
+
+// Funciones para el limitador de solicitudes
+function verificarLimitacionLocal() {
+    const ultimoEnvio = localStorage.getItem('ultimo_envio_solicitud');
+    if (ultimoEnvio) {
+        const tiempoTranscurrido = (Date.now() - parseInt(ultimoEnvio)) / 1000; // en segundos
+        const tiempoEspera = 15 * 60; // 15 minutos en segundos
+        
+        if (tiempoTranscurrido < tiempoEspera) {
+            const tiempoRestante = Math.ceil((tiempoEspera - tiempoTranscurrido) / 60);
+            mostrarLimitacionTiempo(`Debe esperar ${tiempoRestante} minutos antes de enviar otra solicitud`);
+            return false;
+        }
+    }
+    return true;
+}
+
+function registrarEnvioExitoso() {
+    localStorage.setItem('ultimo_envio_solicitud', Date.now().toString());
+    ocultarLimitacionTiempo();
+}
+
+function mostrarLimitacionTiempo(mensaje) {
+    let limitador = document.getElementById('limitador-solicitudes');
+    
+    if (!limitador) {
+        // Crear el elemento si no existe
+        limitador = document.createElement('div');
+        limitador.id = 'limitador-solicitudes';
+        limitador.className = 'limitador-solicitudes';
+        
+        const formulario = document.getElementById('simulador-form');
+        if (formulario) {
+            formulario.parentNode.insertBefore(limitador, formulario);
+        }
+    }
+    
+    limitador.innerHTML = `
+        <h4><i class="fas fa-clock"></i> Limitación de Solicitudes</h4>
+        <p>${mensaje}</p>
+        <div class="tiempo-restante" id="contador-tiempo">Calculando...</div>
+        <p><small>Esta medida evita el uso excesivo del sistema y garantiza igualdad de oportunidades para todos los usuarios.</small></p>
+    `;
+    
+    limitador.style.display = 'block';
+    
+    // Iniciar contador
+    iniciarContadorTiempo();
+}
+
+function ocultarLimitacionTiempo() {
+    const limitador = document.getElementById('limitador-solicitudes');
+    if (limitador) {
+        limitador.style.display = 'none';
+    }
+}
+
+function iniciarContadorTiempo() {
+    const ultimoEnvio = localStorage.getItem('ultimo_envio_solicitud');
+    if (!ultimoEnvio) return;
+    
+    const contador = document.getElementById('contador-tiempo');
+    if (!contador) return;
+    
+    const intervalo = setInterval(() => {
+        const tiempoTranscurrido = (Date.now() - parseInt(ultimoEnvio)) / 1000;
+        const tiempoEspera = 15 * 60; // 15 minutos
+        const tiempoRestante = tiempoEspera - tiempoTranscurrido;
+        
+        if (tiempoRestante <= 0) {
+            contador.textContent = '¡Puede enviar una nueva solicitud!';
+            clearInterval(intervalo);
+            
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(ocultarLimitacionTiempo, 5000);
+            return;
+        }
+        
+        const minutos = Math.floor(tiempoRestante / 60);
+        const segundos = Math.floor(tiempoRestante % 60);
+        contador.textContent = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+        
+    }, 1000);
+}
+
+// Verificar limitación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // ... tu código existente ...
+    
+    // Verificar si hay limitación activa
+    setTimeout(() => {
+        verificarLimitacionLocal();
+    }, 1000);
+});
 
     // Función para mostrar resultados
     function mostrarResultado(totalPuntos, numeroSolicitud) {
@@ -2432,52 +2547,118 @@
       });
     }
 
-    function validarCampo(campo) {
-      const valor = campo.value.trim();
-      const errorElement = document.getElementById(`error-${campo.id}`);
-
-      if (campo) {
-        campo.classList.remove("input-error");
-      }
-
-      if (errorElement) {
-        errorElement.style.display = "none";
-      }
-
-      if (campo.id === "ano_inscripcion") {
-        const anoActual = new Date().getFullYear();
-        if (!valor || isNaN(valor) || valor < 1990 || valor > anoActual) {
-          mostrarError(campo.id, "Por favor, introduce un año válido entre 1990 y " + anoActual);
-          return false;
+    // Función para establecer el año máximo dinámicamente
+function configurarAnoMaximo() {
+    const anoActual = new Date().getFullYear();
+    const inputAno = document.getElementById('ano_inscripcion');
+    
+    if (inputAno) {
+        // Establecer el atributo max dinámicamente
+        inputAno.setAttribute('max', anoActual);
+        
+        // Actualizar placeholder con ejemplo más reciente
+        inputAno.placeholder = `Ej: ${anoActual - 1}`;
+        
+        // Actualizar mensaje de error dinámicamente
+        const errorElement = document.getElementById('error-ano');
+        if (errorElement) {
+            errorElement.textContent = `Por favor, introduce un año válido entre 2000 y ${anoActual}`;
         }
-      } else if (campo.id === "ingresos_anuales") {
-        if (!valor || isNaN(valor) || valor < 0) {
-          mostrarError(campo.id, "Por favor, introduce unos ingresos válidos");
-          return false;
-        }
-      } else if (campo.id === "edad") {
-        if (!valor || isNaN(valor) || valor < 18 || valor > 100) {
-          mostrarError(campo.id, "La edad debe estar entre 18 y 100 años");
-          return false;
-        }
-      }
-
-      return true;
     }
-   
+}
 
-// Llamar a esta función para ver la sección legal
-activarSeccionLegal();
+// Función para activar la sección legal (si es necesaria)
+function activarSeccionLegal() {
+    // Esta función parece que debería mostrar la sección legal
+    // Si quieres que esté activa por defecto, puedes usar:
+    // cambiarSeccion('legal', document.querySelector('[data-seccion="legal"]'));
+    console.log('Función activarSeccionLegal llamada');
+}
 
-    // Protección contra cierre accidental
-    window.addEventListener("beforeunload", function (e) {
-      if (todasLasSolicitudes.length > 0) {
+// Inicializar la página - VERSIÓN CORREGIDA
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("Inicializando página...");
+
+    // Configurar año máximo primero
+    configurarAnoMaximo();
+
+    // Inicializar navegación
+    inicializarNavegacion();
+
+    // Luego el resto de inicializaciones
+    inicializarFAQ();
+    cargarSolicitudesGuardadas();
+
+    // Intentar cargar del servidor
+    try {
+        const solicitudesServidor = await cargarSolicitudesServidor();
+        if (solicitudesServidor.length > 0) {
+            todasLasSolicitudes = solicitudesServidor;
+            guardarSolicitudesLocal();
+            console.log("Datos cargados del servidor:", todasLasSolicitudes.length, "solicitudes");
+        } else {
+            console.log("Servidor no devolvió datos, manteniendo datos locales");
+        }
+    } catch (error) {
+        console.log("Error cargando del servidor, usando datos locales:", error.message);
+    }
+
+    cargarListadosSolicitantes();
+    inicializarValidaciones();
+
+    // Agregar evento al botón calcular
+    document.querySelector(".btn-calcular").addEventListener("click", calcularPuntos);
+
+    // Verificar si hay limitación activa
+    setTimeout(() => {
+        verificarLimitacionLocal();
+    }, 1000);
+
+    console.log("Página inicializada correctamente");
+});
+
+// También necesitas actualizar la función validarCampo para el año
+function validarCampo(campo) {
+    const valor = campo.value.trim();
+    const errorElement = document.getElementById(`error-${campo.id}`);
+
+    if (campo) {
+        campo.classList.remove("input-error");
+    }
+
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
+
+    if (campo.id === "ano_inscripcion") {
+        const anoActual = new Date().getFullYear();
+        if (!valor || isNaN(valor) || valor < 2000 || valor > anoActual) {
+            mostrarError(campo.id, `Por favor, introduce un año válido entre 2000 y ${anoActual}`);
+            return false;
+        }
+    } else if (campo.id === "ingresos_anuales") {
+        if (!valor || isNaN(valor) || valor < 0) {
+            mostrarError(campo.id, "Por favor, introduce unos ingresos válidos");
+            return false;
+        }
+    } else if (campo.id === "edad") {
+        if (!valor || isNaN(valor) || valor < 18 || valor > 100) {
+            mostrarError(campo.id, "La edad debe estar entre 18 y 100 años");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Protección contra cierre accidental
+window.addEventListener("beforeunload", function (e) {
+    if (todasLasSolicitudes.length > 0) {
         e.preventDefault();
         e.returnValue = "";
-      }
-    });
+    }
+});
   </script>
 </body>
 
 </html>
-
