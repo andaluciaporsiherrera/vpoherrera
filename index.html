@@ -2128,7 +2128,7 @@
       try {
         console.log("Enviando solicitud al servidor...", solicitud);
 
-        const response = await fetch(`${API_BASE}https://axsi.free.nf/guardar_solicitud.php`, {
+        const response = await fetch(`${API_BASE}/guardar_solicitud.php`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -2167,7 +2167,7 @@
       try {
         console.log("Cargando solicitudes del servidor...");
 
-        const response = await fetch(`${API_BASE}https://axsi.free.nf/obtener_solicitudes.php`);
+        const response = await fetch(`${API_BASE}/obtener_solicitudes.php`);
 
         if (!response.ok) {
           // NO guardar en localStorage como indicaste
@@ -2232,7 +2232,7 @@
         console.log("🔍 Probando conexión con el servidor...");
 
         // ✅ CORREGIDO: URL correcta
-        const response = await fetch(`${API_BASE}https://axsi.free.nf/obtener_solicitudes.php`);
+        const response = await fetch(`${API_BASE}/obtener_solicitudes.php`);
 
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);
@@ -2292,7 +2292,7 @@
         console.log("Enviando solicitud:", nuevaSolicitud);
 
         // ✅ CORREGIDO: URL correcta
-        const response = await fetch(`${API_BASE}https://axsi.free.nf/guardar_solicitud.php`, {
+        const response = await fetch(`${API_BASE}/guardar_solicitud.php`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
