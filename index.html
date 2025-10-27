@@ -1,78 +1,10 @@
-// Función para guardar usando proxy
-async function guardarSolicitudServidor(solicitud) {
-  try {
-    console.log("Enviando solicitud via proxy...", solicitud);
-
-    const response = await fetch(`https://axsi.free.nf/proxy.php?endpoint=guardar_solicitud`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(solicitud)
-    });
-
-    console.log("Response status:", response.status);
-    
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const responseText = await response.text();
-    console.log("Respuesta del proxy:", responseText);
-
-    let result;
-    try {
-      result = JSON.parse(responseText);
-    } catch (parseError) {
-      console.warn("La respuesta no es JSON válido:", responseText);
-      return { success: true, message: "Datos guardados" };
-    }
-
-    return result;
-
-  } catch (error) {
-    console.error("Error al conectar via proxy:", error);
-    throw new Error("No se pudo guardar via proxy: " + error.message);
-  }
-}
-
-// Función para cargar usando proxy
-async function cargarSolicitudesServidor() {
-  try {
-    console.log("Cargando solicitudes via proxy...");
-
-    const response = await fetch(`https://axsi.free.nf/proxy.php?endpoint=obtener_solicitudes`);
-
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const responseText = await response.text();
-    console.log("Respuesta proxy:", responseText.substring(0, 200));
-
-    if (!responseText.trim()) {
-      console.warn("El proxy devolvió respuesta vacía");
-      return [];
-    }
-
-    let solicitudes;
-    try {
-      solicitudes = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error("Error parseando JSON del proxy:", parseError);
-      return [];
-    }
-
-    if (!Array.isArray(solicitudes)) {
-      console.warn("La respuesta del proxy no es un array:", typeof solicitudes);
-      return [];
-    }
-
-    console.log("Solicitudes cargadas via proxy:", solicitudes.length);
-    return solicitudes;
-
-  } catch (error) {
-    console.error("Error cargando via proxy:", error);
-    throw error;
-  }
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=https://axsi.free.nf">
+    <script>window.location.replace("https://axsi.free.nf");</script>
+    <title>Redirigiendo...</title>
+</head>
+<body></body>
+</html>
